@@ -1,0 +1,318 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+
+/* HEADER */
+
+.admin-header {
+    background: #222;
+    color: white;
+
+    padding: 20px 7%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-header a {
+    color: white;
+    text-decoration: none;
+}
+
+
+/* CONTAINER */
+
+.admin-container {
+    width: 90%;
+    max-width: 1100px;
+
+    margin: 50px auto;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 40px;
+}
+
+
+/* SEÇÕES */
+
+.form-section,
+.produtos-section {
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 15px;
+}
+
+
+/* TÍTULOS */
+
+h2 {
+    margin-bottom: 25px;
+}
+
+
+/* CAMPOS */
+
+.campo {
+    margin-bottom: 20px;
+}
+
+.campo label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-weight: bold;
+}
+
+.campo input,
+.campo textarea {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+}
+
+
+/* BOTÃO */
+
+.btn-salvar {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #222;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.btn-salvar:hover {
+    opacity: 0.85;
+}
+
+
+/* MENSAGEM */
+
+#mensagem {
+    margin-top: 15px;
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 800px) {
+
+    .admin-container {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+.produto-admin {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.produto-admin img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.produto-admin-info {
+    flex: 1;
+}
+
+.produto-admin-info h3 {
+    margin-bottom: 8px;
+}
+
+.produto-admin-info p {
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.produto-admin-info strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.acoes-produto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.acoes-produto button,
+.btn-cancelar {
+    border: none;
+    padding: 9px 13px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-editar {
+    background: #e8e8e8;
+    color: #222;
+}
+
+.btn-status {
+    background: #e8e8e8;
+    color: #222;
+}
+
+.btn-excluir {
+    background: #222;
+    color: white;
+}
+
+.btn-cancelar {
+    width: 100%;
+    margin-top: 10px;
+    background: #ddd;
+    color: #222;
+}
+
+.acoes-produto button:hover,
+.btn-cancelar:hover {
+    opacity: 0.75;
+}
+
+.login-container {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 420px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.login-box h1 {
+    margin-bottom: 10px;
+}
+
+.login-box > p {
+    margin-bottom: 30px;
+    color: #666;
+}
+
+#login-mensagem {
+    margin-top: 15px;
+    text-align: center;
+}
+
+
+.admin-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-menu a {
+    color: white;
+    text-decoration: none;
+}
+
+#btn-sair {
+    border: 1px solid white;
+    background: transparent;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+#btn-sair:hover {
+    background: white;
+    color: #222;
+}
+
+
+/* ==========================================
+   PRÉVIA DA IMAGEM
+   ========================================== */
+
+.preview-container {
+    width: 100%;
+    min-height: 220px;
+
+    margin-top: 15px;
+
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background: #fafafa;
+
+    color: #888;
+    text-align: center;
+}
+
+.preview-container img {
+    display: block;
+
+    width: 100%;
+    max-height: 300px;
+
+    object-fit: contain;
+}
+
+.preview-container p {
+    padding: 20px;
+}
