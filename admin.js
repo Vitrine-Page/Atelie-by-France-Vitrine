@@ -1,16 +1,55 @@
+// ==========================================
+// CONEXÃO COM O SUPABASE
+// ==========================================
+
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
 
+
 // ==========================================
-// PROTEGER PAINEL ADMINISTRATIVO
+// ELEMENTOS DO DOM
+// ==========================================
+
+const formulario =
+    document.getElementById("produto-form");
+
+const mensagem =
+    document.getElementById("mensagem");
+
+const listaProdutos =
+    document.getElementById("lista-produtos");
+
+const campoImagem =
+    document.getElementById("imagem");
+
+const previewContainer =
+    document.getElementById("preview-container");
+
+const btnSair =
+    document.getElementById("btn-sair");
+
+
+// ==========================================
+// ESTADO DA APLICAÇÃO
+// ==========================================
+
+let produtoEditando = null;
+let previewUrlAtual = null;
+
+
+// ==========================================
+// VERIFICAR LOGIN
 // ==========================================
 
 async function verificarLogin() {
 
-    const { data, error } =
-        await supabaseClient.auth.getUser();
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getUser();
+
 
     if (error || !data.user) {
 
@@ -19,192 +58,251 @@ async function verificarLogin() {
         return false;
     }
 
+
+    console.log(
+        "Administrador autenticado:",
+        data.user.email
+    );
+
+
     return true;
 }
-
-verificarLogin();
 
 
 // ==========================================
 // SAIR DO PAINEL
 // ==========================================
 
-const btnSair = document.getElementById("btn-sair");
-
 if (btnSair) {
 
-    btnSair.addEventListener("click", async () => {
+    btnSair.addEventListener(
+        "click",
+        async () => {
 
-        const { error } =
-            await supabaseClient.auth.signOut();
+            btnSair.disabled = true;
+            btnSair.textContent = "Saindo...";
 
-        if (error) {
 
-            console.error(
-                "Erro ao sair:",
+            const {
                 error
-            );
+            } =
+                await supabaseClient.auth.signOut();
 
-            return;
+
+            if (error) {
+
+                console.error(
+                    "Erro ao sair:",
+                    error
+                );
+
+                btnSair.disabled = false;
+                btnSair.textContent = "Sair";
+
+                return;
+            }
+
+
+            window.location.href =
+                "login.html";
+
         }
+    );
 
-        window.location.href = "login.html";
-    });
 }
-
-const formulario = document.getElementById("produto-form");
-const mensagem = document.getElementById("mensagem");
-const listaProdutos = document.getElementById("lista-produtos");
-
-const campoImagem =
-    document.getElementById("imagem");
-
-const previewContainer =
-    document.getElementById("preview-container");
-
-
-let produtoEditando = null;
 
 
 // ==========================================
 // CADASTRAR / EDITAR PRODUTO
 // ==========================================
 
-formulario.addEventListener("submit", async (event) => {
-    event.preventDefault();
+if (formulario) {
 
-    const nome = document.getElementById("nome").value.trim();
-    const descricao = document.getElementById("descricao").value.trim();
-    const preco = Number(document.getElementById("preco").value);
-    const categoria = document.getElementById("categoria").value.trim();
-    const imagem = document.getElementById("imagem").files[0];
+    formulario.addEventListener(
+        "submit",
+        async (event) => {
 
-    // ======================================
-    // EDITAR PRODUTO
-    // ======================================
+            event.preventDefault();
 
-    if (produtoEditando) {
 
-        mensagem.textContent = "Atualizando produto...";
+            const nome =
+                document
+                    .getElementById("nome")
+                    .value
+                    .trim();
 
-        let imagemUrl = produtoEditando.imagem_url;
 
-        // Se escolheu uma nova imagem
-        if (imagem) {
+            const descricao =
+                document
+                    .getElementById("descricao")
+                    .value
+                    .trim();
 
-            mensagem.textContent = "Enviando nova imagem...";
 
-            const nomeArquivo =
-                `${Date.now()}-${imagem.name}`;
+            const preco =
+                Number(
+                    document
+                        .getElementById("preco")
+                        .value
+                );
 
-            const { data: arquivo, error: erroUpload } =
-                await supabaseClient
-                    .storage
-                    .from("produtos")
-                    .upload(nomeArquivo, imagem, {
-                        contentType: imagem.type,
-                        upsert: false
-                    });
 
-            if (erroUpload) {
-                console.error("Erro no upload:", erroUpload);
+            const categoria =
+                document
+                    .getElementById("categoria")
+                    .value
+                    .trim();
+
+
+            const imagem =
+                campoImagem?.files?.[0];
+
+
+            // ======================================
+            // VALIDAÇÕES
+            // ======================================
+
+            if (!nome) {
+
                 mensagem.textContent =
-                    "Erro ao enviar a nova imagem.";
+                    "Digite o nome do produto.";
+
                 return;
             }
 
-            console.log("Nova imagem enviada:", arquivo);
 
-            const { data: urlImagem } =
-                supabaseClient
-                    .storage
-                    .from("produtos")
-                    .getPublicUrl(nomeArquivo);
+            if (Number.isNaN(preco)) {
 
-            imagemUrl = urlImagem.publicUrl;
+                mensagem.textContent =
+                    "Digite um preço válido.";
+
+                return;
+            }
+
+
+            // ======================================
+            // EDITAR PRODUTO
+            // ======================================
+
+            if (produtoEditando) {
+
+                await atualizarProduto({
+                    nome,
+                    descricao,
+                    preco,
+                    categoria,
+                    imagem
+                });
+
+                return;
+            }
+
+
+            // ======================================
+            // NOVO PRODUTO
+            // ======================================
+
+            await cadastrarProduto({
+                nome,
+                descricao,
+                preco,
+                categoria,
+                imagem
+            });
+
         }
+    );
 
-        const { error: erroUpdate } =
-            await supabaseClient
-                .from("produtos")
-                .update({
-                    nome: nome,
-                    descricao: descricao,
-                    preco: preco,
-                    categoria: categoria,
-                    imagem_url: imagemUrl
-                })
-                .eq("id", produtoEditando.id);
-
-        if (erroUpdate) {
-            console.error("Erro ao atualizar:", erroUpdate);
-            mensagem.textContent =
-                "Erro ao atualizar o produto.";
-            return;
-        }
-
-        mensagem.textContent =
-            "Produto atualizado com sucesso!";
-
-        produtoEditando = null;
-
-        formulario.reset();
-
-        previewContainer.innerHTML =
-            "<p>Nenhuma imagem selecionada</p>";
-
-        restaurarModoCadastro();
-
-        carregarProdutos();
-
-        return;
-    }
+}
 
 
-    // ======================================
-    // NOVO PRODUTO
-    // ======================================
+// ==========================================
+// CADASTRAR PRODUTO
+// ==========================================
+
+async function cadastrarProduto({
+    nome,
+    descricao,
+    preco,
+    categoria,
+    imagem
+}) {
 
     if (!imagem) {
+
         mensagem.textContent =
             "Escolha uma imagem para o produto.";
+
         return;
     }
 
-    mensagem.textContent = "Enviando imagem...";
+
+    mensagem.textContent =
+        "Enviando imagem...";
+
 
     const nomeArquivo =
-        `${Date.now()}-${imagem.name}`;
+        criarNomeArquivo(imagem);
 
-    const { data: arquivo, error: erroUpload } =
+
+    const {
+        data: arquivo,
+        error: erroUpload
+    } =
         await supabaseClient
             .storage
             .from("produtos")
-            .upload(nomeArquivo, imagem, {
-                contentType: imagem.type,
-                upsert: false
-            });
+            .upload(
+                nomeArquivo,
+                imagem,
+                {
+                    contentType: imagem.type,
+                    upsert: false
+                }
+            );
+
 
     if (erroUpload) {
-        console.error("Erro no upload:", erroUpload);
+
+        console.error(
+            "Erro no upload:",
+            erroUpload
+        );
+
         mensagem.textContent =
             "Erro ao enviar a imagem.";
+
         return;
     }
 
-    console.log("Imagem enviada:", arquivo);
 
-    const { data: urlImagem } =
-        supabaseClient
-            .storage
-            .from("produtos")
-            .getPublicUrl(nomeArquivo);
+    console.log(
+        "Imagem enviada:",
+        arquivo
+    );
 
-    const imagemUrl = urlImagem.publicUrl;
 
-    mensagem.textContent = "Salvando produto...";
+    const imagemUrl =
+        obterUrlPublica(nomeArquivo);
 
-    const { data: produto, error: erroProduto } =
+
+    if (!imagemUrl) {
+
+        mensagem.textContent =
+            "Não foi possível gerar a URL da imagem.";
+
+        return;
+    }
+
+
+    mensagem.textContent =
+        "Salvando produto...";
+
+
+    const {
+        data: produto,
+        error: erroProduto
+    } =
         await supabaseClient
             .from("produtos")
             .insert({
@@ -218,25 +316,272 @@ formulario.addEventListener("submit", async (event) => {
             .select()
             .single();
 
+
     if (erroProduto) {
-        console.error("Erro ao salvar produto:", erroProduto);
+
+        console.error(
+            "Erro ao salvar produto:",
+            erroProduto
+        );
+
+
+        // Tentar remover imagem que acabou
+        // sendo enviada mas não foi cadastrada
+        await removerImagem(nomeArquivo);
+
+
         mensagem.textContent =
             "Erro ao salvar o produto.";
+
         return;
     }
 
-    console.log("Produto criado:", produto);
+
+    console.log(
+        "Produto criado:",
+        produto
+    );
+
 
     mensagem.textContent =
         "Produto cadastrado com sucesso!";
 
-    formulario.reset();
 
-    previewContainer.innerHTML =
-        "<p>Nenhuma imagem selecionada</p>";
+    limparFormulario();
 
-    carregarProdutos();
-});
+
+    await carregarProdutos();
+
+}
+
+
+// ==========================================
+// ATUALIZAR PRODUTO
+// ==========================================
+
+async function atualizarProduto({
+    nome,
+    descricao,
+    preco,
+    categoria,
+    imagem
+}) {
+
+    mensagem.textContent =
+        "Atualizando produto...";
+
+
+    const imagemAnteriorUrl =
+        produtoEditando.imagem_url;
+
+
+    let imagemUrl =
+        imagemAnteriorUrl;
+
+
+    let novaImagemPath = null;
+
+
+    // ======================================
+    // ENVIAR NOVA IMAGEM
+    // ======================================
+
+    if (imagem) {
+
+        mensagem.textContent =
+            "Enviando nova imagem...";
+
+
+        novaImagemPath =
+            criarNomeArquivo(imagem);
+
+
+        const {
+            data: arquivo,
+            error: erroUpload
+        } =
+            await supabaseClient
+                .storage
+                .from("produtos")
+                .upload(
+                    novaImagemPath,
+                    imagem,
+                    {
+                        contentType: imagem.type,
+                        upsert: false
+                    }
+                );
+
+
+        if (erroUpload) {
+
+            console.error(
+                "Erro no upload da nova imagem:",
+                erroUpload
+            );
+
+
+            mensagem.textContent =
+                "Erro ao enviar a nova imagem.";
+
+            return;
+        }
+
+
+        console.log(
+            "Nova imagem enviada:",
+            arquivo
+        );
+
+
+        imagemUrl =
+            obterUrlPublica(novaImagemPath);
+
+
+        if (!imagemUrl) {
+
+            mensagem.textContent =
+                "Não foi possível gerar a nova URL.";
+
+            await removerImagem(
+                novaImagemPath
+            );
+
+            return;
+        }
+    }
+
+
+    // ======================================
+    // ATUALIZAR BANCO
+    // ======================================
+
+    mensagem.textContent =
+        "Salvando alterações...";
+
+
+    const {
+        error: erroUpdate
+    } =
+        await supabaseClient
+            .from("produtos")
+            .update({
+                nome: nome,
+                descricao: descricao,
+                preco: preco,
+                categoria: categoria,
+                imagem_url: imagemUrl
+            })
+            .eq(
+                "id",
+                produtoEditando.id
+            );
+
+
+    if (erroUpdate) {
+
+        console.error(
+            "Erro ao atualizar:",
+            erroUpdate
+        );
+
+
+        // Se uma imagem nova foi enviada,
+        // mas o banco falhou, remove a nova imagem.
+        if (novaImagemPath) {
+
+            await removerImagem(
+                novaImagemPath
+            );
+        }
+
+
+        mensagem.textContent =
+            "Erro ao atualizar o produto.";
+
+        return;
+    }
+
+
+    // ======================================
+    // REMOVER IMAGEM ANTIGA
+    // ======================================
+
+    if (
+        novaImagemPath &&
+        imagemAnteriorUrl
+    ) {
+
+        const caminhoImagemAntiga =
+            extrairCaminhoImagem(
+                imagemAnteriorUrl
+            );
+
+
+        if (caminhoImagemAntiga) {
+
+            await removerImagem(
+                caminhoImagemAntiga
+            );
+        }
+    }
+
+
+    mensagem.textContent =
+        "Produto atualizado com sucesso!";
+
+
+    produtoEditando = null;
+
+
+    limparFormulario();
+
+
+    restaurarModoCadastro();
+
+
+    await carregarProdutos();
+
+}
+
+
+// ==========================================
+// CRIAR NOME ÚNICO PARA IMAGEM
+// ==========================================
+
+function criarNomeArquivo(imagem) {
+
+    const nomeOriginal =
+        imagem.name
+            .replace(
+                /[^a-zA-Z0-9._-]/g,
+                "-"
+            );
+
+
+    return (
+        `${Date.now()}-${nomeOriginal}`
+    );
+}
+
+
+// ==========================================
+// OBTER URL PÚBLICA
+// ==========================================
+
+function obterUrlPublica(caminho) {
+
+    const {
+        data
+    } =
+        supabaseClient
+            .storage
+            .from("produtos")
+            .getPublicUrl(caminho);
+
+
+    return data?.publicUrl ?? null;
+}
 
 
 // ==========================================
@@ -245,16 +590,29 @@ formulario.addEventListener("submit", async (event) => {
 
 async function carregarProdutos() {
 
+    if (!listaProdutos) {
+        return;
+    }
+
+
     listaProdutos.innerHTML =
         "Carregando produtos...";
 
-    const { data, error } =
+
+    const {
+        data,
+        error
+    } =
         await supabaseClient
             .from("produtos")
             .select("*")
-            .order("criado_em", {
-                ascending: false
-            });
+            .order(
+                "criado_em",
+                {
+                    ascending: false
+                }
+            );
+
 
     if (error) {
 
@@ -263,28 +621,50 @@ async function carregarProdutos() {
             error
         );
 
-        listaProdutos.innerHTML =
-            "<p>Não foi possível carregar os produtos.</p>";
+
+        listaProdutos.innerHTML = `
+            <p>
+                Não foi possível carregar os produtos.
+            </p>
+        `;
 
         return;
     }
+
+
+    console.log(
+        "Produtos carregados:",
+        data
+    );
+
 
     if (!data || data.length === 0) {
 
-        listaProdutos.innerHTML =
-            "<p>Nenhum produto cadastrado.</p>";
+        listaProdutos.innerHTML = `
+            <p>
+                Nenhum produto cadastrado.
+            </p>
+        `;
 
         return;
     }
 
+
     listaProdutos.innerHTML = "";
+
 
     data.forEach(produto => {
 
         const card =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
-        card.classList.add("produto-admin");
+
+        card.classList.add(
+            "produto-admin"
+        );
+
 
         card.innerHTML = `
 
@@ -295,7 +675,9 @@ async function carregarProdutos() {
 
             <div class="produto-admin-info">
 
-                <h3>${produto.nome}</h3>
+                <h3>
+                    ${produto.nome}
+                </h3>
 
                 <p>
                     ${produto.descricao ?? ""}
@@ -303,8 +685,8 @@ async function carregarProdutos() {
 
                 <strong>
                     R$ ${Number(produto.preco)
-                .toFixed(2)
-                .replace(".", ",")}
+                        .toFixed(2)
+                        .replace(".", ",")}
                 </strong>
 
                 <p>
@@ -314,12 +696,16 @@ async function carregarProdutos() {
 
                 <p>
                     Status:
+
                     <strong>
-                        ${produto.ativo
-                ? "🟢 Ativo"
-                : "🔴 Inativo"}
+                        ${
+                            produto.ativo
+                                ? "🟢 Ativo"
+                                : "🔴 Inativo"
+                        }
                     </strong>
                 </p>
+
 
                 <div class="acoes-produto">
 
@@ -330,14 +716,18 @@ async function carregarProdutos() {
                         ✏️ Editar
                     </button>
 
+
                     <button
                         class="btn-status"
                         onclick="alterarStatus('${produto.id}', ${produto.ativo})"
                     >
-                        ${produto.ativo
-                ? "🔴 Desativar"
-                : "🟢 Ativar"}
+                        ${
+                            produto.ativo
+                                ? "🔴 Desativar"
+                                : "🟢 Ativar"
+                        }
                     </button>
+
 
                     <button
                         class="btn-excluir"
@@ -351,7 +741,9 @@ async function carregarProdutos() {
             </div>
         `;
 
+
         listaProdutos.appendChild(card);
+
     });
 }
 
@@ -362,12 +754,16 @@ async function carregarProdutos() {
 
 async function editarProduto(id) {
 
-    const { data, error } =
+    const {
+        data,
+        error
+    } =
         await supabaseClient
             .from("produtos")
             .select("*")
             .eq("id", id)
             .single();
+
 
     if (error) {
 
@@ -379,82 +775,170 @@ async function editarProduto(id) {
         return;
     }
 
+
     produtoEditando = data;
 
-    document.getElementById("nome").value =
+
+    document.getElementById(
+        "nome"
+    ).value =
         data.nome;
 
-    document.getElementById("descricao").value =
+
+    document.getElementById(
+        "descricao"
+    ).value =
         data.descricao ?? "";
 
-    document.getElementById("preco").value =
+
+    document.getElementById(
+        "preco"
+    ).value =
         data.preco;
 
-    document.getElementById("categoria").value =
+
+    document.getElementById(
+        "categoria"
+    ).value =
         data.categoria ?? "";
 
-    document.querySelector(".btn-salvar").textContent =
-        "Atualizar produto";
+
+    // Mostrar imagem atual
+    if (
+        previewContainer &&
+        data.imagem_url
+    ) {
+
+        limparPreview();
+
+
+        previewContainer.innerHTML = `
+            <img
+                src="${data.imagem_url}"
+                alt="${data.nome}"
+            >
+        `;
+    }
+
+
+    const botaoSalvar =
+        document.querySelector(
+            ".btn-salvar"
+        );
+
+
+    if (botaoSalvar) {
+
+        botaoSalvar.textContent =
+            "Atualizar produto";
+    }
+
 
     mensagem.textContent =
         `Editando: ${data.nome}`;
 
+
     mostrarBotaoCancelar();
+
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
+
 }
 
 
 // ==========================================
-// CANCELAR EDIÇÃO
+// BOTÃO CANCELAR EDIÇÃO
 // ==========================================
 
 function mostrarBotaoCancelar() {
 
-    if (document.getElementById("btn-cancelar")) {
+    if (
+        document.getElementById(
+            "btn-cancelar"
+        )
+    ) {
         return;
     }
 
+
     const botao =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
-    botao.id = "btn-cancelar";
-    botao.type = "button";
-    botao.textContent = "Cancelar edição";
 
-    botao.classList.add("btn-cancelar");
+    botao.id =
+        "btn-cancelar";
 
-    botao.onclick = () => {
-        produtoEditando = null;
 
-        formulario.reset();
+    botao.type =
+        "button";
 
-        previewContainer.innerHTML =
-            "<p>Nenhuma imagem selecionada</p>";
 
-        restaurarModoCadastro();
+    botao.textContent =
+        "Cancelar edição";
 
-        mensagem.textContent = "";
-    };
 
-    formulario.appendChild(botao);
+    botao.classList.add(
+        "btn-cancelar"
+    );
+
+
+    botao.addEventListener(
+        "click",
+        () => {
+
+            produtoEditando = null;
+
+            limparFormulario();
+
+            restaurarModoCadastro();
+
+            mensagem.textContent = "";
+
+        }
+    );
+
+
+    formulario.appendChild(
+        botao
+    );
 }
 
 
+// ==========================================
+// RESTAURAR MODO CADASTRO
+// ==========================================
+
 function restaurarModoCadastro() {
 
-    document.querySelector(".btn-salvar").textContent =
-        "Salvar produto";
+    const botaoSalvar =
+        document.querySelector(
+            ".btn-salvar"
+        );
+
+
+    if (botaoSalvar) {
+
+        botaoSalvar.textContent =
+            "Salvar produto";
+    }
+
 
     const botaoCancelar =
-        document.getElementById("btn-cancelar");
+        document.getElementById(
+            "btn-cancelar"
+        );
+
 
     if (botaoCancelar) {
+
         botaoCancelar.remove();
     }
+
 }
 
 
@@ -462,17 +946,28 @@ function restaurarModoCadastro() {
 // ATIVAR / DESATIVAR
 // ==========================================
 
-async function alterarStatus(id, statusAtual) {
+async function alterarStatus(
+    id,
+    statusAtual
+) {
 
-    const novoStatus = !statusAtual;
+    const novoStatus =
+        !statusAtual;
 
-    const { error } =
+
+    const {
+        error
+    } =
         await supabaseClient
             .from("produtos")
             .update({
                 ativo: novoStatus
             })
-            .eq("id", id);
+            .eq(
+                "id",
+                id
+            );
+
 
     if (error) {
 
@@ -481,14 +976,18 @@ async function alterarStatus(id, statusAtual) {
             error
         );
 
+
         alert(
             "Não foi possível alterar o status."
         );
 
+
         return;
     }
 
-    carregarProdutos();
+
+    await carregarProdutos();
+
 }
 
 
@@ -503,17 +1002,29 @@ async function excluirProduto(id) {
             "Tem certeza que deseja excluir este produto?"
         );
 
+
     if (!confirmar) {
         return;
     }
 
-    // Buscar produto
-    const { data: produto, error: erroBusca } =
+
+    // ======================================
+    // BUSCAR PRODUTO
+    // ======================================
+
+    const {
+        data: produto,
+        error: erroBusca
+    } =
         await supabaseClient
             .from("produtos")
             .select("*")
-            .eq("id", id)
+            .eq(
+                "id",
+                id
+            )
             .single();
+
 
     if (erroBusca) {
 
@@ -522,16 +1033,26 @@ async function excluirProduto(id) {
             erroBusca
         );
 
+
         return;
     }
 
 
-    // Excluir registro do banco
-    const { error: erroDelete } =
+    // ======================================
+    // EXCLUIR REGISTRO
+    // ======================================
+
+    const {
+        error: erroDelete
+    } =
         await supabaseClient
             .from("produtos")
             .delete()
-            .eq("id", id);
+            .eq(
+                "id",
+                id
+            );
+
 
     if (erroDelete) {
 
@@ -540,105 +1061,255 @@ async function excluirProduto(id) {
             erroDelete
         );
 
+
         alert(
             "Não foi possível excluir o produto."
         );
+
 
         return;
     }
 
 
-    // Excluir imagem do Storage
+    // ======================================
+    // EXCLUIR IMAGEM
+    // ======================================
+
     if (produto.imagem_url) {
 
-        try {
+        const caminhoImagem =
+            extrairCaminhoImagem(
+                produto.imagem_url
+            );
 
-            const marcador =
-                "/storage/v1/object/public/produtos/";
 
-            const indice =
-                produto.imagem_url.indexOf(marcador);
+        if (caminhoImagem) {
 
-            if (indice !== -1) {
-
-                const caminho =
-                    decodeURIComponent(
-                        produto.imagem_url.substring(
-                            indice + marcador.length
-                        )
-                    );
-
-                const { error: erroImagem } =
-                    await supabaseClient
-                        .storage
-                        .from("produtos")
-                        .remove([caminho]);
-
-                if (erroImagem) {
-                    console.error(
-                        "Erro ao excluir imagem:",
-                        erroImagem
-                    );
-                }
-            }
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao processar imagem:",
-                erro
+            await removerImagem(
+                caminhoImagem
             );
         }
     }
 
-    carregarProdutos();
+
+    await carregarProdutos();
+
 }
 
 
 // ==========================================
-// CARREGAR PRODUTOS AO ABRIR O PAINEL
+// EXTRAIR CAMINHO DA IMAGEM
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", () => {
-    carregarProdutos();
-});
+function extrairCaminhoImagem(url) {
+
+    const marcador =
+        "/storage/v1/object/public/produtos/";
+
+
+    const indice =
+        url.indexOf(marcador);
+
+
+    if (indice === -1) {
+        return null;
+    }
+
+
+    return decodeURIComponent(
+        url.substring(
+            indice + marcador.length
+        )
+    );
+}
+
+
+// ==========================================
+// REMOVER IMAGEM DO STORAGE
+// ==========================================
+
+async function removerImagem(
+    caminho
+) {
+
+    if (!caminho) {
+        return;
+    }
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from("produtos")
+            .remove([
+                caminho
+            ]);
+
+
+    if (error) {
+
+        console.error(
+            "Erro ao remover imagem:",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// LIMPAR PRÉVIA
+// ==========================================
+
+function limparPreview() {
+
+    if (!previewContainer) {
+        return;
+    }
+
+
+    if (previewUrlAtual) {
+
+        URL.revokeObjectURL(
+            previewUrlAtual
+        );
+
+        previewUrlAtual = null;
+    }
+
+
+    previewContainer.innerHTML = `
+        <p>
+            Nenhuma imagem selecionada
+        </p>
+    `;
+}
+
 
 // ==========================================
 // PRÉVIA DA IMAGEM
 // ==========================================
 
-campoImagem.addEventListener("change", () => {
+if (campoImagem) {
 
-    const arquivo = campoImagem.files[0];
+    campoImagem.addEventListener(
+        "change",
+        () => {
 
-    // Nenhuma imagem selecionada
-    if (!arquivo) {
+            const arquivo =
+                campoImagem.files[0];
 
-        previewContainer.innerHTML =
-            "<p>Nenhuma imagem selecionada</p>";
 
+            if (!arquivo) {
+
+                limparPreview();
+
+                return;
+            }
+
+
+            if (
+                !arquivo.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                previewContainer.innerHTML = `
+                    <p>
+                        Selecione um arquivo de imagem válido.
+                    </p>
+                `;
+
+
+                campoImagem.value = "";
+
+
+                return;
+            }
+
+
+            if (previewUrlAtual) {
+
+                URL.revokeObjectURL(
+                    previewUrlAtual
+                );
+            }
+
+
+            previewUrlAtual =
+                URL.createObjectURL(
+                    arquivo
+                );
+
+
+            previewContainer.innerHTML = `
+                <img
+                    src="${previewUrlAtual}"
+                    alt="Prévia da imagem"
+                >
+            `;
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// LIMPAR FORMULÁRIO
+// ==========================================
+
+function limparFormulario() {
+
+    if (formulario) {
+        formulario.reset();
+    }
+
+
+    limparPreview();
+
+}
+
+
+// ==========================================
+// INICIALIZAR PAINEL
+// ==========================================
+
+async function iniciarPainel() {
+
+    const autenticado =
+        await verificarLogin();
+
+
+    if (!autenticado) {
         return;
     }
 
-    // Verificar se é realmente uma imagem
-    if (!arquivo.type.startsWith("image/")) {
 
-        previewContainer.innerHTML =
-            "<p>Selecione um arquivo de imagem válido.</p>";
+    await carregarProdutos();
 
-        campoImagem.value = "";
+}
 
-        return;
-    }
 
-    // Criar prévia
-    const url =
-        URL.createObjectURL(arquivo);
+// ==========================================
+// INICIAR QUANDO A PÁGINA ESTIVER PRONTA
+// ==========================================
 
-    previewContainer.innerHTML = `
-        <img
-            src="${url}"
-            alt="Prévia da imagem"
-        >
-    `;
-});
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        iniciarPainel
+    );
+
+} else {
+
+    iniciarPainel();
+
+}

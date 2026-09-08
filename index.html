@@ -2,29 +2,52 @@
 <html lang="pt-br">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LandingPageBase</title>
+
+    <title>Ateliê France | Arte, Cultura e Identidade</title>
+
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
     <header class="header">
 
         <div class="logo">
-            Ateliê France
+
+            <img class="img-logo" src="logo.png" alt="Logo Ateliê France">
+
+            <span>
+                Ateliê by France
+            </span>
+
         </div>
 
+
         <nav>
-            <a href="#vitrine">Vitrine</a>
-            <a href="#Contato">Contato</a>
+
+            <a href="#vitrine">
+                Vitrine
+            </a>
+
+            <a href="#contato">
+                Contato
+            </a>
+
         </nav>
 
+
         <a class="btn-whatsapp" href="https://wa.me/5500000000000" target="_blank">
-            whatsApp
+            WhatsApp
         </a>
+
     </header>
+
 
     <main>
 
@@ -32,18 +55,23 @@
 
             <div class="hero-Content">
 
+                <img class="logo-header" src="logo.png" alt="logo Atelie By France">
                 <p class="tag">
                     ARTE • CULTURA • IDENTIDADE
                 </p>
 
 
+                <h1>
+                    Atelie By France
+                </h1>
 
-                <h1>Arte que Conta Histórias</h1>
 
-                <p> Conheça nossa coleção e encontre
+                <p>
+                    Conheça nossa coleção e encontre
                     peças feitas para transmitir
                     identidade e significado.
                 </p>
+
 
                 <a href="#vitrine" class="btn-primary">
                     Ver Vitrine
@@ -53,23 +81,34 @@
 
         </section>
 
+
         <section id="vitrine" class="vitrine">
 
             <div class="selection-title">
 
-                <p>EXPLORE</p>
+                <p>
+                    EXPLORE
+                </p>
 
-                <H2>Nossa vitrine</H2>
 
-                <span>Conheça nossos produtos.</span>
+                <h2>
+                    Nossa vitrine
+                </h2>
+
+
+                <span>
+                    Conheça nossos produtos.
+                </span>
 
             </div>
 
+
             <div id="produtos" class="produtos">
-                <!--Os produtos aparecerção aqui-->
+                <!-- Os produtos aparecerão aqui -->
             </div>
 
         </section>
+
 
         <section id="contato" class="contato">
 
@@ -77,15 +116,18 @@
                 Gostou de alguma coisa?
             </h2>
 
+
             <p>
                 Entre em contato conosco para saber mais
             </p>
 
+
             <div class="contato-buttons">
 
                 <a href="https://wa.me/5500000000000" target="_blank" class="btn-primary">
-                    falar no WhatsApp
+                    Falar no WhatsApp
                 </a>
+
 
                 <a href="https://instagram.com/" target="_blank" class="btn-secondary">
                     Instagram
@@ -97,22 +139,62 @@
 
     </main>
 
+
     <footer>
 
         <p>
-            @ 2026 Atelie France
+            @ 2026 Atelie by France
         </p>
 
-        <a href="admin.html">Admin</a>
+
+        <a href="admin.html">
+            Admin
+        </a>
 
     </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ==========================================
+     MODAL DO PRODUTO
+     ========================================== -->
 
-<script src="config.js"></script>
+    <div id="produto-modal" class="produto-modal">
 
-<script src="script.js"></script>
+        <div class="produto-modal-overlay"></div>
+
+        <div class="produto-modal-content">
+
+            <button id="fechar-modal" class="fechar-modal" aria-label="Fechar">
+                &times;
+            </button>
+
+            <img id="modal-imagem" src="" alt="">
+
+            <div class="modal-info">
+
+                <h2 id="modal-nome"></h2>
+
+                <p id="modal-descricao"></p>
+
+                <div id="modal-preco" class="modal-preco"></div>
+
+                <a id="modal-whatsapp" class="btn-modal-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+                    Falar no WhatsApp
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="config.js"></script>
+
+    <script src="site-config.js"></script>
+
+    <script src="script.js"></script>
+
 </body>
-
 
 </html>
