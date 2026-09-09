@@ -1,7 +1,7 @@
 const SITE_CONFIG = {
 
-    whatsapp: "96991726776",
+    whatsapp: "9691303048",
 
-    instagram: "https://instagram.com/"
+    instagram: "https://www.instagram.com/atelie_by_france/"
 
 };
