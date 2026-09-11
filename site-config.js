@@ -1,7 +1,21 @@
 const SITE_CONFIG = {
 
-    whatsapp: "9691303048",
+    // ==========================================
+    // IDENTIFICAÇÃO DA VITRINE
+    // ==========================================
 
-    instagram: "https://www.instagram.com/atelie_by_france/"
+    vitrineId:
+        "3045c959-1a78-4f41-a6e4-504e351c8ee9",
+
+
+    // ==========================================
+    // CONTATOS
+    // ==========================================
+
+    whatsapp:
+        "9691303048",
+
+    instagram:
+        "https://www.instagram.com/atelie_by_france/"
 
 };

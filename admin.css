@@ -1,75 +1,480 @@
+/* =========================================================
+   RESET
+   ========================================================= */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    color: #222;
+    background: #f7f3ed;
+    color: #573229;
 }
 
 
-/* HEADER */
+/* =========================================================
+   PALETA
+   ========================================================= */
+
+:root {
+    --vinho: #45251f;
+    --marrom: #61362a;
+    --terracota: #a85332;
+    --terracota-escuro: #8f452b;
+
+    --dourado: #c49a35;
+    --dourado-claro: #d7b65d;
+
+    --creme: #f7f3ed;
+    --creme-2: #f2ede4;
+
+    --bege: #e8ddd0;
+    --bege-escuro: #d6c6b8;
+
+    --branco: #fffdf9;
+
+    --texto: #573229;
+    --texto-suave: #80665c;
+
+    --verde: #50623d;
+
+    --borda: rgba(84, 45, 34, 0.10);
+
+    --sombra:
+        0 12px 35px rgba(72, 43, 32, 0.07);
+
+    --sombra-hover:
+        0 22px 55px rgba(72, 43, 32, 0.12);
+}
+
+
+/* =========================================================
+   SELEÇÃO
+   ========================================================= */
+
+::selection {
+    background: var(--dourado);
+    color: white;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+body {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   HEADER ADMIN
+   ========================================================= */
 
 .admin-header {
-    background: #222;
-    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 
-    padding: 20px 7%;
+    width: 100%;
+
+    padding: 18px 6%;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 25px;
+
+    background:
+        rgba(69, 37, 31, 0.94);
+
+    color: var(--branco);
+
+    border-bottom:
+        1px solid rgba(215, 182, 93, 0.24);
+
+    box-shadow:
+        0 8px 30px rgba(50, 25, 19, 0.12);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
+
+.admin-header::after {
+    content: "";
+
+    position: absolute;
+
+    left: 6%;
+    right: 6%;
+    bottom: -1px;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(215, 182, 93, 0.45),
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LINK DO HEADER
+   ========================================================= */
 
 .admin-header a {
-    color: white;
+    position: relative;
+
+    color: var(--branco);
+
     text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition:
+        color .35s ease,
+        transform .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.admin-header a:hover {
+    color: var(--dourado-claro);
+
+    transform: translateY(-1px);
 }
 
 
-/* CONTAINER */
+/* =========================================================
+   MENU ADMIN
+   ========================================================= */
+
+.admin-menu {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.admin-menu a {
+    opacity: .92;
+}
+
+.admin-menu a:hover {
+    opacity: 1;
+}
+
+
+/* =========================================================
+   BOTÃO SAIR
+   ========================================================= */
+
+#btn-sair {
+    position: relative;
+
+    border:
+        1px solid rgba(215, 182, 93, 0.65);
+
+    background: transparent;
+
+    color: var(--branco);
+
+    padding: 9px 17px;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    overflow: hidden;
+
+    transition:
+        color .4s ease,
+        border-color .4s ease,
+        transform .4s cubic-bezier(.22, 1, .36, 1),
+        background .4s ease;
+}
+
+#btn-sair::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        var(--dourado);
+
+    transform:
+        scaleX(0);
+
+    transform-origin: right;
+
+    transition:
+        transform .55s cubic-bezier(.22, 1, .36, 1);
+
+    z-index: -1;
+}
+
+#btn-sair:hover {
+    color: var(--vinho);
+
+    border-color: var(--dourado);
+
+    transform:
+        translateY(-2px);
+}
+
+#btn-sair:hover::before {
+    transform:
+        scaleX(1);
+
+    transform-origin: left;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
 
 .admin-container {
-    width: 90%;
-    max-width: 1100px;
+    position: relative;
 
-    margin: 50px auto;
+    width: min(92%, 1240px);
+
+    margin:
+        55px auto 90px;
 
     display: grid;
 
     grid-template-columns:
-        1fr 1fr;
+        minmax(0, .9fr)
+        minmax(0, 1.1fr);
 
-    gap: 40px;
+    gap: 28px;
+
+    align-items: start;
 }
 
 
-/* SEÇÕES */
+/* =========================================================
+   LUZ DECORATIVA DO FUNDO
+   ========================================================= */
+
+.admin-container::before {
+    content: "";
+
+    position: fixed;
+
+    width: 420px;
+    height: 420px;
+
+    top: 120px;
+    right: -180px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(196, 154, 53, 0.14);
+
+    box-shadow:
+        0 0 0 35px rgba(196, 154, 53, 0.025),
+        0 0 0 70px rgba(196, 154, 53, 0.018);
+
+    animation:
+        orbitar 18s ease-in-out infinite;
+
+    pointer-events: none;
+}
+
+@keyframes orbitar {
+
+    0%,
+    100% {
+        transform:
+            translate3d(0, 0, 0)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translate3d(-20px, 28px, 0)
+            rotate(7deg);
+    }
+}
+
+
+/* =========================================================
+   SEÇÕES
+   ========================================================= */
 
 .form-section,
 .produtos-section {
-    background: white;
+    position: relative;
 
-    padding: 30px;
+    background:
+        rgba(255, 253, 249, 0.92);
 
-    border-radius: 15px;
+    padding: 32px;
+
+    border:
+        1px solid rgba(84, 45, 34, 0.09);
+
+    border-radius: 24px;
+
+    box-shadow:
+        var(--sombra);
+
+    overflow: hidden;
+
+    animation:
+        entradaSecao .8s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.produtos-section {
+    animation-delay: .08s;
+}
+
+.form-section::before,
+.produtos-section::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--terracota),
+            var(--dourado),
+            transparent 75%
+        );
+}
+
+.form-section::after,
+.produtos-section::after {
+    content: "";
+
+    position: absolute;
+
+    width: 160px;
+    height: 160px;
+
+    right: -95px;
+    bottom: -95px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(196, 154, 53, 0.13);
+
+    pointer-events: none;
+}
+
+@keyframes entradaSecao {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(22px)
+            scale(.985);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
 }
 
 
-/* TÍTULOS */
+/* =========================================================
+   TÍTULOS
+   ========================================================= */
 
 h2 {
-    margin-bottom: 25px;
+    position: relative;
+
+    margin-bottom: 28px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-weight: 400;
+
+    font-size: clamp(28px, 3vw, 36px);
+
+    line-height: 1.1;
+
+    letter-spacing: -.5px;
+
+    color: var(--vinho);
+}
+
+h2::after {
+    content: "";
+
+    display: block;
+
+    width: 42px;
+    height: 1px;
+
+    margin-top: 13px;
+
+    background:
+        var(--dourado);
+
+    transform-origin: left;
+
+    animation:
+        linhaTitulo 1s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes linhaTitulo {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scaleX(0);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scaleX(1);
+    }
 }
 
 
-/* CAMPOS */
+/* =========================================================
+   CAMPOS
+   ========================================================= */
 
 .campo {
-    margin-bottom: 20px;
+    margin-bottom: 21px;
 }
 
 .campo label {
@@ -77,242 +482,1144 @@ h2 {
 
     margin-bottom: 8px;
 
-    font-weight: bold;
+    color: var(--marrom);
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: .2px;
 }
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
 
 .campo input,
 .campo textarea {
     width: 100%;
 
-    padding: 12px;
+    padding: 13px 15px;
 
-    border: 1px solid #ddd;
+    border:
+        1px solid #dfd4ca;
 
-    border-radius: 8px;
+    border-radius: 12px;
+
+    background:
+        #fdfbf8;
+
+    color: var(--texto);
+
+    font-family:
+        Arial,
+        sans-serif;
 
     font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color .35s ease,
+        background .35s ease,
+        box-shadow .45s cubic-bezier(.22, 1, .36, 1),
+        transform .35s cubic-bezier(.22, 1, .36, 1);
+}
+
+.campo textarea {
+    min-height: 130px;
+
+    resize: vertical;
+
+    line-height: 1.55;
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+    color: #a8968b;
+}
+
+.campo input:hover,
+.campo textarea:hover {
+    border-color:
+        #cdb9aa;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    background:
+        #fffdf9;
+
+    border-color:
+        var(--dourado);
+
+    box-shadow:
+        0 0 0 4px rgba(196, 154, 53, 0.10),
+        0 8px 22px rgba(72, 43, 32, 0.05);
+
+    transform:
+        translateY(-1px);
 }
 
 
-/* BOTÃO */
+/* =========================================================
+   BOTÃO SALVAR
+   ========================================================= */
 
 .btn-salvar {
+    position: relative;
+
     width: 100%;
 
-    padding: 14px;
+    padding: 14px 18px;
 
-    border: none;
+    border:
+        1px solid var(--terracota);
 
-    border-radius: 8px;
+    border-radius: 999px;
 
-    background: #222;
+    background:
+        var(--terracota);
 
-    color: white;
+    color: var(--branco);
 
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: 700;
 
     cursor: pointer;
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    transition:
+        transform .45s cubic-bezier(.22, 1, .36, 1),
+        box-shadow .45s cubic-bezier(.22, 1, .36, 1),
+        background .35s ease;
+}
+
+.btn-salvar::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -110%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            105deg,
+            transparent,
+            rgba(255,255,255,.24),
+            transparent
+        );
+
+    transform:
+        skewX(-18deg);
+
+    transition:
+        left .7s cubic-bezier(.22, 1, .36, 1);
+
+    z-index: -1;
 }
 
 .btn-salvar:hover {
-    opacity: 0.85;
+    background:
+        var(--terracota-escuro);
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 14px 28px rgba(168, 83, 50, .20);
+}
+
+.btn-salvar:hover::before {
+    left: 135%;
+}
+
+.btn-salvar:active {
+    transform:
+        translateY(-1px)
+        scale(.99);
 }
 
 
-/* MENSAGEM */
+/* =========================================================
+   MENSAGEM
+   ========================================================= */
 
 #mensagem {
     margin-top: 15px;
+
+    min-height: 18px;
+
+    color: var(--texto-suave);
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    transition:
+        opacity .35s ease,
+        transform .35s ease;
 }
 
 
-/* RESPONSIVO */
+/* =========================================================
+   LISTA DE PRODUTOS
+   ========================================================= */
 
-@media (max-width: 800px) {
+#lista-produtos {
+    display: flex;
 
-    .admin-container {
-        grid-template-columns: 1fr;
-    }
+    flex-direction: column;
 
+    gap: 13px;
 }
+
+
+/* =========================================================
+   PRODUTO ADMIN
+   ========================================================= */
 
 .produto-admin {
+    position: relative;
+
     display: flex;
-    gap: 15px;
-    padding: 15px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fafafa;
+
+    gap: 16px;
+
+    padding: 14px;
+
+    margin-bottom: 0;
+
+    border:
+        1px solid rgba(84, 45, 34, .09);
+
+    border-radius: 17px;
+
+    background:
+        #fcfaf7;
+
+    overflow: hidden;
+
+    transition:
+        transform .55s cubic-bezier(.22, 1, .36, 1),
+        box-shadow .55s cubic-bezier(.22, 1, .36, 1),
+        border-color .4s ease,
+        background .4s ease;
 }
 
-.produto-admin img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
+.produto-admin::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 3px;
+    height: 100%;
+
+    background:
+        var(--dourado);
+
+    transform:
+        scaleY(0);
+
+    transform-origin: bottom;
+
+    transition:
+        transform .55s cubic-bezier(.22, 1, .36, 1);
 }
+
+.produto-admin:hover {
+    background:
+        var(--branco);
+
+    border-color:
+        rgba(196, 154, 53, .25);
+
+    transform:
+        translateY(-4px)
+        translateX(2px);
+
+    box-shadow:
+        var(--sombra-hover);
+}
+
+.produto-admin:hover::before {
+    transform:
+        scaleY(1);
+
+    transform-origin: top;
+}
+
+
+/* =========================================================
+   IMAGEM DO PRODUTO
+   ========================================================= */
+
+.produto-admin img {
+    width: 110px;
+    height: 110px;
+
+    flex-shrink: 0;
+
+    object-fit: contain;
+
+    border-radius: 13px;
+
+    padding: 6px;
+
+    background:
+        #f4efe8;
+
+    border:
+        1px solid rgba(84, 45, 34, .07);
+
+    transition:
+        transform .7s cubic-bezier(.22, 1, .36, 1),
+        background .4s ease;
+}
+
+.produto-admin:hover img {
+    transform:
+        scale(1.035)
+        rotate(-1deg);
+
+    background:
+        #f8f3ec;
+}
+
+
+/* =========================================================
+   INFORMAÇÕES
+   ========================================================= */
 
 .produto-admin-info {
     flex: 1;
+
+    min-width: 0;
+
+    padding:
+        2px 2px 2px 0;
 }
 
 .produto-admin-info h3 {
-    margin-bottom: 8px;
+    margin-bottom: 7px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 19px;
+
+    font-weight: 400;
+
+    line-height: 1.25;
+
+    color:
+        var(--vinho);
 }
 
 .produto-admin-info p {
     margin-bottom: 6px;
-    color: #555;
+
+    color:
+        var(--texto-suave);
+
+    font-size: 13px;
+
+    line-height: 1.5;
 }
 
 .produto-admin-info strong {
     display: block;
+
     margin-bottom: 8px;
-    font-size: 18px;
+
+    color:
+        var(--terracota);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 19px;
+
+    font-weight: 400;
 }
+
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
 
 .acoes-produto {
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 8px;
+
     margin-top: 15px;
 }
 
 .acoes-produto button,
 .btn-cancelar {
-    border: none;
-    padding: 9px 13px;
-    border-radius: 7px;
+    border:
+        1px solid transparent;
+
+    padding:
+        9px 13px;
+
+    border-radius:
+        999px;
+
     cursor: pointer;
-    font-size: 14px;
-}
 
-.btn-editar {
-    background: #e8e8e8;
-    color: #222;
-}
+    font-size: 13px;
 
-.btn-status {
-    background: #e8e8e8;
-    color: #222;
-}
+    font-weight: 600;
 
-.btn-excluir {
-    background: #222;
-    color: white;
-}
-
-.btn-cancelar {
-    width: 100%;
-    margin-top: 10px;
-    background: #ddd;
-    color: #222;
+    transition:
+        transform .4s cubic-bezier(.22, 1, .36, 1),
+        background .3s ease,
+        color .3s ease,
+        border-color .3s ease,
+        box-shadow .4s ease;
 }
 
 .acoes-produto button:hover,
 .btn-cancelar:hover {
-    opacity: 0.75;
+    opacity: 1;
+
+    transform:
+        translateY(-2px);
 }
 
+.acoes-produto button:active,
+.btn-cancelar:active {
+    transform:
+        translateY(0)
+        scale(.98);
+}
+
+
+/* =========================================================
+   EDITAR
+   ========================================================= */
+
+.btn-editar {
+    background:
+        #eee7df;
+
+    color:
+        var(--marrom);
+
+    border-color:
+        #dfd2c7 !important;
+}
+
+.btn-editar:hover {
+    background:
+        var(--bege);
+
+    border-color:
+        var(--dourado) !important;
+
+    box-shadow:
+        0 8px 18px rgba(84, 45, 34, .08);
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.btn-status {
+    background:
+        #f3ede6;
+
+    color:
+        var(--marrom);
+
+    border-color:
+        #e1d5ca !important;
+}
+
+.btn-status:hover {
+    background:
+        #e8dfd5;
+
+    border-color:
+        var(--dourado) !important;
+}
+
+
+/* =========================================================
+   EXCLUIR
+   ========================================================= */
+
+.btn-excluir {
+    position: relative;
+
+    background:
+        var(--vinho);
+
+    color:
+        var(--branco);
+
+    overflow: hidden;
+}
+
+.btn-excluir:hover {
+    background:
+        var(--terracota-escuro);
+
+    box-shadow:
+        0 8px 18px rgba(69, 37, 31, .16);
+}
+
+
+/* =========================================================
+   CANCELAR
+   ========================================================= */
+
+.btn-cancelar {
+    width: 100%;
+
+    margin-top: 10px;
+
+    background:
+        transparent;
+
+    color:
+        var(--marrom);
+
+    border-color:
+        #d9cbbf;
+
+    border-radius:
+        999px;
+}
+
+.btn-cancelar:hover {
+    background:
+        var(--creme-2);
+
+    border-color:
+        var(--dourado);
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
 .login-container {
+    position: relative;
+
     min-height: 100vh;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    padding: 20px;
+    padding: 30px;
+
+    overflow: hidden;
+
+    background:
+        var(--creme);
 }
+
+.login-container::before {
+    content: "";
+
+    position: absolute;
+
+    width: 460px;
+    height: 460px;
+
+    top: -180px;
+    left: -180px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(196, 154, 53, .18);
+
+    box-shadow:
+        0 0 0 30px rgba(196, 154, 53, .025),
+        0 0 0 60px rgba(196, 154, 53, .018);
+
+    animation:
+        loginOrb 15s ease-in-out infinite;
+}
+
+.login-container::after {
+    content: "";
+
+    position: absolute;
+
+    width: 360px;
+    height: 360px;
+
+    bottom: -170px;
+    right: -120px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(168, 83, 50, .12);
+
+    animation:
+        loginOrb 20s ease-in-out infinite reverse;
+}
+
+@keyframes loginOrb {
+
+    0%,
+    100% {
+        transform:
+            translate3d(0, 0, 0)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translate3d(18px, -15px, 0)
+            rotate(6deg);
+    }
+}
+
+
+/* =========================================================
+   CAIXA LOGIN
+   ========================================================= */
 
 .login-box {
+    position: relative;
+
+    z-index: 2;
+
     width: 100%;
+
     max-width: 420px;
 
-    background: white;
+    background:
+        rgba(255, 253, 249, .94);
 
-    padding: 40px;
+    padding:
+        42px 38px;
 
-    border-radius: 15px;
+    border:
+        1px solid rgba(84, 45, 34, .10);
 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-radius:
+        26px;
+
+    box-shadow:
+        0 25px 70px rgba(72, 43, 32, .10);
+
+    backdrop-filter:
+        blur(14px);
+    -webkit-backdrop-filter:
+        blur(14px);
+
+    animation:
+        loginEntrada 1s cubic-bezier(.22, 1, .36, 1) both;
 }
+
+.login-box::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 18%;
+
+    width: 64%;
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--dourado),
+            transparent
+        );
+}
+
+.login-box::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -55px;
+    bottom: -55px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(196, 154, 53, .15);
+}
+
+@keyframes loginEntrada {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(28px)
+            scale(.965);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   TÍTULO LOGIN
+   ========================================================= */
 
 .login-box h1 {
     margin-bottom: 10px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(31px, 6vw, 42px);
+
+    font-weight: 400;
+
+    line-height: 1.05;
+
+    color:
+        var(--vinho);
 }
+
+.login-box h1::after {
+    content: "";
+
+    display: block;
+
+    width: 38px;
+    height: 1px;
+
+    margin-top: 14px;
+
+    background:
+        var(--dourado);
+}
+
+
+/* =========================================================
+   TEXTO LOGIN
+   ========================================================= */
 
 .login-box > p {
     margin-bottom: 30px;
-    color: #666;
+
+    color:
+        var(--texto-suave);
+
+    font-size: 14px;
+
+    line-height: 1.6;
 }
+
+
+/* =========================================================
+   MENSAGEM LOGIN
+   ========================================================= */
 
 #login-mensagem {
     margin-top: 15px;
+
     text-align: center;
+
+    color:
+        var(--texto-suave);
+
+    font-size: 13px;
+
+    line-height: 1.4;
 }
 
 
-.admin-menu {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.admin-menu a {
-    color: white;
-    text-decoration: none;
-}
-
-#btn-sair {
-    border: 1px solid white;
-    background: transparent;
-    color: white;
-    padding: 8px 15px;
-    border-radius: 7px;
-    cursor: pointer;
-}
-
-#btn-sair:hover {
-    background: white;
-    color: #222;
-}
-
-
-/* ==========================================
+/* =========================================================
    PRÉVIA DA IMAGEM
-   ========================================== */
+   ========================================================= */
 
 .preview-container {
+    position: relative;
+
     width: 100%;
+
     min-height: 220px;
 
     margin-top: 15px;
 
-    border: 2px dashed #ddd;
-    border-radius: 12px;
+    border:
+        1.5px dashed #d5c7bb;
+
+    border-radius:
+        16px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
     overflow: hidden;
 
-    background: #fafafa;
+    background:
+        #fbf8f3;
 
-    color: #888;
+    color:
+        #927f73;
+
     text-align: center;
+
+    transition:
+        border-color .4s ease,
+        background .4s ease,
+        box-shadow .5s ease;
 }
 
+.preview-container::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 10px;
+
+    border:
+        1px solid rgba(196, 154, 53, .09);
+
+    border-radius:
+        11px;
+
+    pointer-events: none;
+
+    transition:
+        opacity .4s ease;
+}
+
+.preview-container:hover {
+    border-color:
+        rgba(196, 154, 53, .65);
+
+    background:
+        #fffaf4;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(196,154,53,.04),
+        0 12px 26px rgba(72,43,32,.05);
+}
+
+
+/* =========================================================
+   PREVIEW IMAGE
+   ========================================================= */
+
 .preview-container img {
+    position: relative;
+
+    z-index: 1;
+
     display: block;
 
     width: 100%;
+
     max-height: 300px;
 
-    object-fit: contain;
+    object-fit:
+        contain;
+
+    padding: 12px;
+
+    transition:
+        transform .7s cubic-bezier(.22, 1, .36, 1);
 }
 
+.preview-container:hover img {
+    transform:
+        scale(1.025);
+}
+
+
+/* =========================================================
+   TEXTO DA PREVIEW
+   ========================================================= */
+
 .preview-container p {
+    position: relative;
+
+    z-index: 1;
+
     padding: 20px;
+
+    color:
+        #927f73;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .admin-container {
+        grid-template-columns:
+            1fr;
+
+        max-width: 760px;
+    }
+
+    .admin-header {
+        padding:
+            17px 5%;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .admin-header {
+        padding:
+            14px 20px;
+
+        gap: 12px;
+    }
+
+    .admin-header a {
+        font-size: 13px;
+    }
+
+    .admin-menu {
+        gap: 9px;
+    }
+
+    .admin-menu a {
+        display: none;
+    }
+
+    #btn-sair {
+        padding:
+            8px 14px;
+
+        font-size: 12px;
+    }
+
+    .admin-container {
+        width:
+            calc(100% - 28px);
+
+        margin:
+            28px auto 55px;
+
+        gap: 18px;
+    }
+
+    .form-section,
+    .produtos-section {
+        padding:
+            23px 18px;
+
+        border-radius:
+            20px;
+    }
+
+    h2 {
+        margin-bottom:
+            23px;
+
+        font-size:
+            30px;
+    }
+
+    .campo {
+        margin-bottom:
+            18px;
+    }
+
+    .campo input,
+    .campo textarea {
+        padding:
+            12px 13px;
+
+        font-size:
+            14px;
+    }
+
+    .produto-admin {
+        gap:
+            12px;
+
+        padding:
+            11px;
+
+        border-radius:
+            15px;
+    }
+
+    .produto-admin img {
+        width:
+            82px;
+
+        height:
+            82px;
+
+        border-radius:
+            11px;
+
+        padding:
+            5px;
+    }
+
+    .produto-admin-info h3 {
+        font-size:
+            17px;
+    }
+
+    .produto-admin-info p {
+        font-size:
+            12px;
+    }
+
+    .produto-admin-info strong {
+        font-size:
+            17px;
+    }
+
+    .acoes-produto {
+        gap:
+            6px;
+
+        margin-top:
+            12px;
+    }
+
+    .acoes-produto button,
+    .btn-cancelar {
+        padding:
+            8px 11px;
+
+        font-size:
+            12px;
+    }
+
+    .login-container {
+        padding:
+            20px;
+    }
+
+    .login-box {
+        padding:
+            34px 23px;
+
+        border-radius:
+            22px;
+    }
+
+    .login-box h1 {
+        font-size:
+            34px;
+    }
+
+    .preview-container {
+        min-height:
+            190px;
+    }
+
+    .preview-container img {
+        max-height:
+            250px;
+    }
+}
+
+
+/* =========================================================
+   CELULARES PEQUENOS
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    .produto-admin {
+        display:
+            grid;
+
+        grid-template-columns:
+            76px 1fr;
+    }
+
+    .produto-admin img {
+        width:
+            76px;
+
+        height:
+            76px;
+    }
+
+    .produto-admin-info {
+        min-width:
+            0;
+    }
+
+    .acoes-produto {
+        grid-column:
+            1 / -1;
+    }
+
+    .preview-container {
+        min-height:
+            170px;
+    }
+}
+
+
+/* =========================================================
+   REDUÇÃO DE MOVIMENTO
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
 }
