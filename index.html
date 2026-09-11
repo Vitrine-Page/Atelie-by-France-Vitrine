@@ -2,132 +2,297 @@
 <html lang="pt-br">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Ateliê by France | Vitrine</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
-
 
 <body>
 
-    <header class="header">
+    <!-- ==========================================
+         HEADER
+    ========================================== -->
+    <header class="site-header">
 
-        <div class="logo">
+        <div class="header-inner">
 
-            <img class="img-logo" src="logo.png" alt="Logo Ateliê France">
+            <a href="#inicio" class="brand">
+                <img
+                    src="logo.png"
+                    alt="Ateliê by France"
+                    class="brand-logo"
+                >
+            </a>
 
-            <span>
-                Ateliê by France
-            </span>
+            <nav class="main-nav" aria-label="Navegação principal">
+                <a href="#inicio">Início</a>
+                <a href="#produtos">Produtos</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contato">Contato</a>
+            </nav>
+
+            <a
+                href="https://wa.me/559691303048"
+                class="header-contact"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Fale conosco
+            </a>
 
         </div>
-
-
-        <nav>
-
-            <a href="#vitrine">
-                Vitrine
-            </a>
-
-            <a href="#contato">
-                Contato
-            </a>
-
-        </nav>
-
-
-        <a class="btn-whatsapp" href="https://wa.me/5500000000000" target="_blank">
-            WhatsApp
-        </a>
 
     </header>
 
 
     <main>
 
-        <section class="hero">
+        <!-- ==========================================
+             INTRO / HERO
+        ========================================== -->
+        <section id="inicio" class="intro">
 
-            <div class="hero-Content">
+            <div class="intro-inner">
 
-                <img class="logo-header" src="logo.png" alt="logo Atelie By France">
-                <p class="tag">
-                    ARTE • CULTURA • IDENTIDADE
-                </p>
+                <div class="intro-copy">
+
+                    <span class="intro-label">
+                        ATELIÊ BY FRANCE
+                    </span>
+
+                    <h1>
+                        Arte que carrega
+                        <em>identidade.</em>
+                    </h1>
+
+                    <p>
+                        Peças artesanais inspiradas em cultura,
+                        ancestralidade e expressão. Criações para
+                        vestir, usar e representar quem você é.
+                    </p>
+
+                    <a
+                        href="#produtos"
+                        class="intro-cta"
+                    >
+                        Explorar coleção
+                    </a>
+
+                </div>
 
 
-                <h1>
-                    Atelie By France
-                </h1>
+                <div class="intro-visual">
 
+                    <div class="intro-image intro-image-main">
+                        <!-- imagem principal -->
+                         <img src="img-header.webp" alt="bolsa telie">
+                    </div>
 
-                <p>
-                    Conheça nossa coleção e encontre
-                    peças feitas para transmitir
-                    identidade e significado.
-                </p>
+                    <div class="intro-image intro-image-secondary">
+                        <img src="bolsa.png" alt="">
+                         
+                    </div>
 
+                   
 
-                <a href="#vitrine" class="btn-primary">
-                    Ver Vitrine
-                </a>
+                </div>
 
             </div>
 
         </section>
 
 
-        <section id="vitrine" class="vitrine">
+        <!-- ==========================================
+             DIVISOR EDITORIAL
+        ========================================== -->
+        <section class="statement">
 
-            <div class="selection-title">
-
-                <p>
-                    EXPLORE
-                </p>
-
-
-                <h2>
-                    Nossa vitrine
-                </h2>
-
-
-            </div>
-
-
-            <div id="produtos" class="produtos">
-                <!-- Os produtos aparecerão aqui -->
-            </div>
-
-        </section>
-
-
-        <section id="contato" class="contato">
-
-            <h2>
-                Gostou de alguma coisa?
-            </h2>
-
+            <div class="statement-line"></div>
 
             <p>
-                Entre em contato conosco para saber mais
+                Mais que acessórios.
+                <strong>Uma forma de contar sua história.</strong>
             </p>
 
+            <div class="statement-line"></div>
 
-            <div class="contato-buttons">
+        </section>
 
-                <a href="https://wa.me/5500000000000" target="_blank" class="btn-primary btn-whatsapp">
-                    Falar no WhatsApp
+
+        <!-- ==========================================
+             PRODUTOS
+        ========================================== -->
+        <section id="produtos" class="catalog">
+
+            <div class="catalog-header">
+
+                <div class="catalog-title">
+
+                    <span class="section-label">
+                        NOSSA COLEÇÃO
+                    </span>
+
+                    <h2>
+                        Escolha o que<br>
+                        representa você.
+                    </h2>
+
+                </div>
+
+
+                <div class="catalog-intro">
+
+                    <p>
+                        Descubra peças feitas à mão,
+                        com referências afro e detalhes
+                        que valorizam cada criação.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!--
+                IMPORTANTE:
+                O JavaScript continua utilizando
+                #produtos para inserir os produtos.
+            -->
+            <div
+                id="produtos"
+                class="products-grid"
+            >
+                <!-- Produtos carregados pelo JavaScript -->
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             DETALHE / FRASE
+        ========================================== -->
+        <section class="editorial-highlight">
+
+            <div class="editorial-highlight-inner">
+
+                <span class="section-label">
+                    IDENTIDADE
+                </span>
+
+                <h2>
+                    Vista suas raízes.<br>
+                    <em>Valorize sua história.</em>
+                </h2>
+
+                <p>
+                    Cada peça nasce para unir estética,
+                    significado e personalidade em um
+                    trabalho feito com intenção.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             SOBRE
+        ========================================== -->
+        <section id="sobre" class="about">
+
+            <div class="about-image">
+                <!-- imagem editorial -->
+                 <img src="france.webp" alt="franceli">
+            </div>
+
+
+            <div class="about-content">
+
+                <span class="section-label">
+                    SOBRE O ATELIÊ
+                </span>
+
+                <h2>
+                    Raízes que adornam
+                    nossa história.
+                </h2>
+
+                <p>
+                    O Ateliê by France transforma referências
+                    da cultura afro em peças autorais, feitas
+                    com cuidado e significado.
+                </p>
+
+                <p>
+                    Nosso trabalho valoriza identidade,
+                    criatividade, ancestralidade e a beleza
+                    presente em cada detalhe.
+                </p>
+
+                <a
+                    href="#contato"
+                    class="text-link"
+                >
+                    Conheça o Ateliê
+                    <span>→</span>
                 </a>
 
+            </div>
 
-                <a href="https://instagram.com/" target="_blank" class="btn-secondary btn-instagram">
-                    Instagram
-                </a>
+        </section>
+
+
+        <!-- ==========================================
+             CONTATO
+        ========================================== -->
+        <section id="contato" class="contact">
+
+            <div class="contact-inner">
+
+                <div class="contact-copy">
+
+                    <span class="section-label">
+                        FALE CONOSCO
+                    </span>
+
+                    <h2>
+                        Encontrou uma peça
+                        que combina com você?
+                    </h2>
+
+                    <p>
+                        Entre em contato com o Ateliê
+                        e saiba mais sobre disponibilidade,
+                        encomendas e detalhes das peças.
+                    </p>
+
+                </div>
+
+
+                <div class="contact-actions">
+
+                    <a
+                        href="https://wa.me/559691303048"
+                        class="contact-button primary"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        WhatsApp
+                    </a>
+
+                    <a
+                        href="https://instagram.com/atelie_by_france"
+                        class="contact-button secondary"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Instagram
+                    </a>
+
+                </div>
 
             </div>
 
@@ -136,45 +301,140 @@
     </main>
 
 
-    <footer>
+    <!-- ==========================================
+         FOOTER
+    ========================================== -->
+    <footer class="site-footer">
 
-        <p>
-            @ 2026 Atelie by France
-        </p>
+        <div class="footer-top">
+
+            <a href="#inicio" class="footer-brand">
+
+                <img
+                    src="logo.png"
+                    alt="Ateliê by France"
+                >
+
+            </a>
 
 
-        <a href="admin.html">
-            Admin
-        </a>
+            <div class="footer-links">
+
+                <a href="#inicio">Início</a>
+                <a href="#produtos">Produtos</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contato">Contato</a>
+
+            </div>
+
+
+            <div class="footer-social">
+
+                <a
+                    href="https://instagram.com/atelie_by_france"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Instagram
+                </a>
+
+                <a
+                    href="https://wa.me/559691303048"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    WhatsApp
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Ateliê by France
+            </p>
+
+            <a href="admin.html">
+                Admin
+            </a>
+
+            <span>
+                Vista sua história.
+            </span>
+
+        </div>
 
     </footer>
 
-    <!-- ==========================================
-     MODAL DO PRODUTO
-     ========================================== -->
 
-    <div id="produto-modal" class="produto-modal">
+    <!-- ==========================================
+         MODAL DO PRODUTO
+         IDs PRESERVADOS PARA O JAVASCRIPT
+    ========================================== -->
+    <div
+        id="produto-modal"
+        class="produto-modal"
+        aria-hidden="true"
+    >
 
         <div class="produto-modal-overlay"></div>
 
-        <div class="produto-modal-content">
 
-            <button id="fechar-modal" class="fechar-modal" aria-label="Fechar">
+        <div
+            class="produto-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-nome"
+        >
+
+            <button
+                id="fechar-modal"
+                class="fechar-modal"
+                type="button"
+                aria-label="Fechar produto"
+            >
                 &times;
             </button>
 
-            <img id="modal-imagem" src="" alt="">
+
+            <div class="modal-product-image">
+
+                <img
+                    id="modal-imagem"
+                    src=""
+                    alt=""
+                >
+
+            </div>
+
 
             <div class="modal-info">
+
+                <span class="modal-label">
+                    ATELIÊ BY FRANCE
+                </span>
 
                 <h2 id="modal-nome"></h2>
 
                 <p id="modal-descricao"></p>
 
-                <div id="modal-preco" class="modal-preco"></div>
+                <div
+                    id="modal-preco"
+                    class="modal-preco"
+                ></div>
 
-                <a id="modal-whatsapp" class="btn-modal-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
-                    Falar no WhatsApp
+
+                <a
+                    id="modal-whatsapp"
+                    class="btn-modal-whatsapp"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Tenho interesse
                 </a>
 
             </div>
@@ -182,13 +442,15 @@
         </div>
 
     </div>
-    
+
+
+    <!-- ==========================================
+         SCRIPTS
+         MANTIDOS
+    ========================================== -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="config.js"></script>
-
     <script src="site-config.js"></script>
-
     <script src="script.js"></script>
 
 </body>
